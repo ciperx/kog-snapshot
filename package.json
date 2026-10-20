@@ -1,0 +1,19 @@
+{
+  "name": "@ciperx/kog-snapshot",
+  "version": "1.0.0",
+  "description": "Reproducible ranked holder snapshot for a Solana token mint, SPL Token and Token 2022 aware, with a sha256 over the kept list.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {"kog-snapshot": "dist/cli.js"},
+  "exports": {".": "./dist/snapshot.js", "./rpc": "./dist/rpc.js"},
+  "files": ["dist", "README.md"],
+  "engines": {"node": ">=20"},
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}
