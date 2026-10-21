@@ -1,0 +1,32 @@
+{
+  "name": "kog-snapshot",
+  "version": "1.0.0",
+  "description": "Reproducible open snapshot of a Solana token's top holders: SPL Token and Token 2022 aware, grouped by owner, with a sha256.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/snapshot.js",
+  "types": "./src/snapshot.ts",
+  "exports": {
+    ".": {
+      "types": "./src/snapshot.ts",
+      "import": "./src/snapshot.js",
+      "default": "./src/snapshot.js"
+    }
+  },
+  "bin": {
+    "kog-snapshot": "./bin/kog-snapshot.mjs"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "snapshot": "node ./bin/kog-snapshot.mjs"
+  }
+}
