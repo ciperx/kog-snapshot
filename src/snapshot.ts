@@ -104,3 +104,27 @@ export function buildSnapshot(input: BuildInput): Snapshot {
   const holders = ranked.slice(0, top);
   return { mint, slot, total: total.toString(), holders, hash: hashHolders(holders) };
 }
+
+/**
+ * Spec entry point: snapshot({accounts, exclusions, top}) -> {holders[], hash}.
+ *
+ * The accounts carry their mint, so mint and slot are optional here; when they
+ * are absent the snapshot is not pinned to a mint and reads the mint from the
+ * accounts themselves. The result is the same shape buildSnapshot returns.
+ */
+export function snapshot(
+  input: Partial<BuildInput> & { accounts: TokenAccountItem[]; slot?: number | null }
+): Snapshot {
+  if (!Array.isArray(input.accounts)) throw new Error("accounts must be an array");
+  const first = input.accounts.find((a) => a?.account?.data?.parsed?.info?.mint);
+  const mint = input.mint ?? first?.account.data.parsed.info.mint ?? "";
+  if (mint === "") {
+    const holders: Holder[] = [];
+    return { mint: "", slot: 0, total: "0", holders, hash: hashHolders(holders) };
+  }
+  return buildSnapshot({
+    ...input,
+    mint,
+    slot: input.slot ?? 0,
+  });
+}

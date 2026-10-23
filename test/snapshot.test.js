@@ -83,3 +83,22 @@ test("A5 counts Token 2022 accounts with extensions, including a frozen state", 
   const snap = buildSnapshot({ mint: MINT, slot: 14, accounts });
   assert.deepEqual(snap.holders, [{ rank: 1, owner: "ownerA", amount: "1500" }]);
 });
+
+test("A6 the spec entry point snapshot() needs no mint or slot, applies exclusions and top, and is order independent", async () => {
+  const { snapshot } = await import("../dist/snapshot.js");
+  const accounts = [
+    item("AccA", "OwnerA", "100"),
+    item("AccB", "OwnerB", "100"),
+    item("AccC", "OwnerCurve", "999"),
+    item("AccD", "OwnerA", "50"),
+  ];
+  const one = snapshot({ accounts, exclusions: { owners: ["OwnerCurve"] }, top: 2 });
+  assert.deepEqual(one.holders, [
+    { rank: 1, owner: "OwnerA", amount: "150" },
+    { rank: 2, owner: "OwnerB", amount: "100" },
+  ]);
+  assert.match(one.hash, /^[0-9a-f]{64}$/);
+  const two = snapshot({ accounts: [...accounts].reverse(), exclusions: { owners: ["OwnerCurve"] }, top: 2 });
+  assert.equal(two.hash, one.hash);
+  assert.equal(snapshot({ accounts: [], top: 5 }).hash, hashHolders([]));
+});

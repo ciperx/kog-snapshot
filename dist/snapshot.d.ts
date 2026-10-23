@@ -54,3 +54,14 @@ export interface BuildInput {
  */
 export declare function hashHolders(holders: Holder[]): string;
 export declare function buildSnapshot(input: BuildInput): Snapshot;
+/**
+ * Spec entry point: snapshot({accounts, exclusions, top}) -> {holders[], hash}.
+ *
+ * The accounts carry their mint, so mint and slot are optional here; when they
+ * are absent the snapshot is not pinned to a mint and reads the mint from the
+ * accounts themselves. The result is the same shape buildSnapshot returns.
+ */
+export declare function snapshot(input: Partial<BuildInput> & {
+    accounts: TokenAccountItem[];
+    slot?: number | null;
+}): Snapshot;
